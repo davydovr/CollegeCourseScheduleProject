@@ -1,3 +1,6 @@
+
+
+
 public class Course implements Comparable<Course>
 {
 	private Integer cRN;
