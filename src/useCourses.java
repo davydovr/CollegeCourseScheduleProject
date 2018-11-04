@@ -1,5 +1,4 @@
 
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -23,13 +22,30 @@ public class useCourses {
 				System.out.println();
 			}
 			
+			String courseCode = "MCON 141";
+			
+			ArrayList<Course> returnedCourses = searchCourses(courses, courseCode);
+			System.out.println(returnedCourses.toString()); // remove once connected to GUI
 		}
 		catch(SQLException e)
 		{
 			System.out.println(e);
 		}
 		
+	}
+	
+	public static ArrayList<Course> searchCourses(ArrayList<Course> courses, String courseCode)
+	{
+		ArrayList<Course> selectedCourses = new ArrayList<Course>();
 		
-		
+		for(Course course : courses)
+		{
+			if(course.getCode().equals(courseCode))
+			{
+				selectedCourses.add(course);
+			}
 		}
+		
+		return selectedCourses;
+	}
 }
