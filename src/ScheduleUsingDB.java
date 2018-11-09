@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 
 public class ScheduleUsingDB extends JFrame {
 
@@ -175,7 +174,7 @@ public class ScheduleUsingDB extends JFrame {
 		
 		for(Course course : courses)
 		{
-			if(course.getCode().equals(courseCode))
+			if(course.getCode().equalsIgnoreCase(courseCode))
 			{
 				selectedCourses.add(course);
 			}
