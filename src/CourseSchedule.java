@@ -13,6 +13,7 @@ public class CourseSchedule {
 	{
 			courses = new ArrayList<Course>();
 			this.maxCredits = maxCredits;
+			this.semester = semester;
 	}
 	
 	//method to add a course to the student's schedule
@@ -55,7 +56,7 @@ public class CourseSchedule {
 			
 		}
 		
-		return false;
+		return true;
 	}
 
 	private boolean checkCredits(Course course) {
@@ -108,6 +109,20 @@ public class CourseSchedule {
 		}
 		
 		return courses2;
+	}
+	
+	//to string
+	@Override
+	public String toString()
+	{
+		StringBuilder output = new StringBuilder();
+		output.append(semester+":\n");
+		for(Course course: courses)
+		{
+			output.append(course+"\n");
+		}
+		
+		return output.toString();
 	}
 
 }
