@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
 
+import ScheduleCompMethProject.src.Course;
+
 public class RuthCourseObjects {
 	
 	private ArrayList <Course> ruthCourses;
@@ -65,17 +67,47 @@ public class RuthCourseObjects {
 		ruthCourses.add( new Course(13393, "MATN261", "Statistics For Soc Sci", "Siegel Stephanie", 06 ,3));
 		ruthCourses.add( new Course(11258, "MCON140", "Computer Concepts/Business Applctn", "Zlotnikov Aleksandr",06,3));
 		ruthCourses.add( new Course(11259, "MCON141", "Introduction To Programming", "Morgulis Debra", 06 ,3));
-//		ruthCourses.add( new Course(11256, "MCON343", "Data Base Concepts & Design", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
-//		ruthCourses.add( new Course(, "", "", "", ,));
+		ruthCourses.add( new Course(11256, "MCON343", "Data Base Concepts & Design", "Plonczak Miriam", 06 ,3));
+		ruthCourses.add( new Course(11111, "POLN304", "Politics Of Mid East", "Mond Alan", 06 ,3));
+		ruthCourses.add( new Course(11953, "PSYN209", "Introduction To Art Therapy I", "Grenadir Atara", 06 ,3));
+		ruthCourses.add( new Course(13201, "PSYN326", "Advanced Topics In Psychology", "Soffer Rebecca", 06 ,3));
+		ruthCourses.add( new Course(11658, "SPLN208", "Phonetics", "Roitman Rita", 06 ,3));
+		ruthCourses.add( new Course(11659, "SPLN361", "Psycholinguistics", "Bottino Patti", 06 ,3));
+		ruthCourses.add( new Course(11221, "BION101", "Principles Of Biology I", "Schiffenbauer Milton", 07 ,3));
+		ruthCourses.add( new Course(11331, "BION102L", "Principles Of Biology II Lab", "Borger Rivka", 07 ,0));
+		ruthCourses.add( new Course(11380, "BION222L", "Anatomy & Physiology I Lab", "Strickman Jeffrey", 07 ,0));
+		ruthCourses.add( new Course(11452, "BIO223", "Anatomy & Physiology II", "Wells Jean", 07 ,4));
+		ruthCourses.add( new Course(12303, "CPCN201", "Organic Chemistry I", "Mintzer Evan", 07 ,4));
+		ruthCourses.add( new Course(11222, "BION101L", "Principles Of Biology I Lab", "Schiffenbauer Milton", 08 ,0));
+		ruthCourses.add( new Course(11224, "BION101", "Principles Of Biology I", "Zheng Zihwa", 10 ,4));
+		ruthCourses.add( new Course(11339, "BION111", "Human Biology Non-Majors", "Merdian William", 10 ,4));
+		ruthCourses.add( new Course(11483, "BION228L", "Microbiology Lab", "Leifer Zev", 10 ,0));
+		ruthCourses.add( new Course(12105, "CPPNL", "General Physics I Lab", "TBA", 10 ,0));
+		ruthCourses.add( new Course(12289, "CPCN201", "Organic Chemistry I", "Mintzer Evan", 10 ,4));
+		ruthCourses.add( new Course(12693, "EBAN102", "Prin Of Accounting II", "Edelstein Jacob", 10 ,3));
+		ruthCourses.add( new Course(12697, "EBAN202", "Intermediate Accounting II", "Ehrlich Devorah", 10 ,3));
+		ruthCourses.add( new Course(12701, "EBAN209", "Financial Statement Analysis", "Berger Chaim", 10 ,3));
+		ruthCourses.add( new Course(12702, "EBAN213", "Cost Accounting", "Saltz Simon", 10 ,3));
+		ruthCourses.add( new Course(12703, "EBAN301", "Adv Accounting", "Rosenbaum Shulem", 10 ,3));
+		ruthCourses.add( new Course(12705, "EBEN102", "Principles Of Microeconomics", "Yarmish Morris", 10 ,3));
+		ruthCourses.add( new Course(12708, "EBFN410", "Seminar In Options Trading", "Fischbein William", 10 ,3));
+		ruthCourses.add( new Course(12717, "EBKN207", "Social Media & Marketing", "Diamantstein Michael", 10 ,3));
+		ruthCourses.add( new Course(12710, "EBKN315", "Advertising & Promotion Management", "Rovt Steven", 10 ,3));
+		ruthCourses.add( new Course(12719, "EBMN204", "Human Resource Management", "Felder Simcha", 10 ,3));
+		ruthCourses.add( new Course(10631, "EDUN302", "Diag & Corr Read Disab", "Sonnenschein Devorah", 10 ,3));
+		ruthCourses.add( new Course(10624, "HISN221", "Survey Mod History II", "Nierman Jay Harris", 10 ,3));
+		ruthCourses.add( new Course(10658, "JSBN262", "The Latter Prophets: Isaiah", "Layosh Itzhac", 10 ,3));
+		ruthCourses.add( new Course(10623, "HISN342", "Topics In Us Socl Intellectual Hist", "Hertzberg David", 10 ,3));
+		ruthCourses.add( new Course(13584, "BION101L", "Principles of Biology Lab", "Levine Alan", 11 ,3));
+		ruthCourses.add( new Course(11390, "BION222", "Anatomy & Physiology I", "Merdian William", 11 ,4));
+		ruthCourses.add( new Course(11950, "COAN222", "Workshop: Studio Art/Painting I", "Grenadir Atara", 11 ,4));
+		ruthCourses.add( new Course(12265, "CPCN102L", "General Chemistry II Lab", "Abbasi Najmunisa", 11 ,0));
+		ruthCourses.add( new Course(11260, "BION101L", "Principles Of Biology I Lab", "Zheng Zihwa", 14 ,0));
+		ruthCourses.add( new Course(11516, "BION246", "Nutrition And Human Development", "Weinberger Rachael", 14 ,3));
+		ruthCourses.add( new Course(12263, "CPCN101", "General Chemistry I", "Mintzer Evan", 14 ,3));
+		ruthCourses.add( new Course(12290, "CPCN201L", "Organic Chemistry I Lab", "TBA", 14 ,0));
+		ruthCourses.add( new Course(13580, "BION101", "Principles of Biology", "TBA", 16 ,4));
+		ruthCourses.add( new Course(13001, "EBEN101", "Principles Of Macroeconomics", "TBA", 16 ,3));
 //		ruthCourses.add( new Course(, "", "", "", ,));
 
 	
