@@ -1,7 +1,5 @@
-
+ 
 import java.util.ArrayList;
-
-import ScheduleCompMethProject.src.Course;
 
 public class RuthCourseObjects {
 	

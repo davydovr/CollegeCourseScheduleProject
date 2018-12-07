@@ -112,7 +112,7 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 		coursesTable.setEnabled(false);	//not to let users tamper with the output
 
 		JScrollPane scrollPane = new JScrollPane(coursesTable);
-		scrollPane.setBounds(41, 78, 568, 243);
+		scrollPane.setBounds(41, 78, 568, 217);
 		panel.add(scrollPane);		//displays the top header
 
 		
@@ -125,7 +125,7 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 		enterCourse.setBounds(52, 39, 158, 27);
 		userInputCourse.setBounds(205, 36, 135, 30);
 		showSchedule.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		showSchedule.setBounds(41, 333, 135, 39);
+		showSchedule.setBounds(41, 311, 169, 39);
 
 	}
 
@@ -196,7 +196,8 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 			 
 		}
 		else {
-			//if foundCourse IS null..
+			//make popup box to display error message
+			JOptionPane.showMessageDialog(null, "CRN does not exist.");
 		}
 			//to resize the columns to fit the contents 
 			for (int x = 0; x < tableHeadings.length; x++) {
