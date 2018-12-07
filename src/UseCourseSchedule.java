@@ -33,6 +33,7 @@ public class UseCourseSchedule
 							{
 								System.out.println("Enter CRN:");
 								crn = keyboard.nextInt();
+								keyboard.nextLine();//clear buffer
 								flag=true;
 							}
 							catch(InputMismatchException e)

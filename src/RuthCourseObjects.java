@@ -78,7 +78,7 @@ public class RuthCourseObjects {
 		ruthCourses.add( new Course(11380, "BION222L", "Anatomy & Physiology I Lab", "Strickman Jeffrey", 07 ,0));
 		ruthCourses.add( new Course(11452, "BIO223", "Anatomy & Physiology II", "Wells Jean", 07 ,4));
 		ruthCourses.add( new Course(12303, "CPCN201", "Organic Chemistry I", "Mintzer Evan", 07 ,4));
-		ruthCourses.add( new Course(11222, "BION101L", "Principles Of Biology I Lab", "Schiffenbauer Milton", 08 ,0));
+		//ruthCourses.add( new Course(11222, "BION101L", "Principles Of Biology I Lab", "Schiffenbauer Milton", 08 ,0));
 		ruthCourses.add( new Course(11224, "BION101", "Principles Of Biology I", "Zheng Zihwa", 10 ,4));
 		ruthCourses.add( new Course(11339, "BION111", "Human Biology Non-Majors", "Merdian William", 10 ,4));
 		ruthCourses.add( new Course(11483, "BION228L", "Microbiology Lab", "Leifer Zev", 10 ,0));

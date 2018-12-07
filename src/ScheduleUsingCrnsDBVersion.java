@@ -5,7 +5,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
@@ -32,9 +34,8 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 	private DefaultTableModel modelTable;
 	private JTextField userInputCourse;
 	private String [] tableHeadings = {"CRN", "Course Code", "Course Name", "Professor", "TimeSlot", "Credits"};
-	private RuthCourseObjects ruthCourses;
 	private CourseSchedule schedule = new CourseSchedule(18, "Fall-2019"); //instantiate course schedule
-	
+	private ArrayList<Course> courses = databaseConnection();
 	private JButton showSchedule;
 
 
@@ -171,7 +172,7 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 		//We are not clearing the results of the previous search because it is getting added on cumulatively
 		
 		//find course by CRN
-		Course foundCourse = searchCourses(crn);
+		Course foundCourse = searchCourses(courses, crn);
 
 		if (foundCourse != null) {
 			
@@ -255,19 +256,36 @@ public class ScheduleUsingCrnsDBVersion extends JFrame {
 		//				table.getColumnModel().getColumn(y).setCellRenderer(centerRenderer);	
 		//			}
 	}//end packColumn
-
+	private ArrayList<Course> databaseConnection()
+	{
+		ArrayList<Course> courses= new ArrayList<Course>();
+		try //create connection
+		{
+			ConnectDB connectDB = new ConnectDB("jdbc:sqlserver://localhost;databaseName=CourseSchedule;integratedSecurity=true");
+			//query	
+			
+			InstantiateCourseObjects fillArray = new InstantiateCourseObjects(connectDB);
+			courses =fillArray.getCourses();//courses in the database to compare to
+		}
+		//connection failed
+		catch(SQLException e)
+		{
+			JOptionPane.showMessageDialog(null, "failed connection");
+			System.exit(1);
+		}
+		return courses;
+	}
 	
-	public Course searchCourses(Integer crn) {	
-		
-		ruthCourses = new RuthCourseObjects();
-		ArrayList <Course> allCourses = new ArrayList <Course> ();
-		allCourses = ruthCourses.getRuthCourses();
-		
-		for(Course c : allCourses) {
+	public static Course searchCourses(ArrayList<Course> courses, Integer crn)
+	{	
+		for(Course c : courses)
+		{
 			if(c.getCRN().equals(crn))
+			{
 				return c;
+			}
 		}
 		return null;
-	}//end searchCourses
+	}
 
 }
