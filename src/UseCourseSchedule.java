@@ -1,5 +1,4 @@
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -8,7 +7,8 @@ public class UseCourseSchedule
 {
 	public static void main(String [] args)
 	{
-		CourseSchedule schedule = new CourseSchedule(18, "Fall-2019"); //instantiate course schedule
+		CourseSchedule schedule;
+		String semester = "Fall-2019"; 
 		Scanner keyboard = new Scanner(System.in);
 		Boolean flag= false;
 		
@@ -20,20 +20,22 @@ public class UseCourseSchedule
 				
 				InstantiateCourseObjects fillArray = new InstantiateCourseObjects(connectDB);
 				ArrayList<Course> courses =fillArray.getCourses();//courses in the database to compare to
-				Course course=null;
-				int crn=0;
+				ArrayList<String> selectedCourseCodes= new ArrayList<String>(); //these are the courses that the user wishes to take
+				//int crn=0;
+				String courseCode= null;
 				String choice =null;
 				do
 				{
-					while(course==null)
-					{
+					//while(selectedCourseCodes==null)
+					//{
+					do {	
 						do
 						{
 							try
 							{
-								System.out.println("Enter CRN:");
-								crn = keyboard.nextInt();
-								keyboard.nextLine();//clear buffer
+								System.out.println("Enter Course Code:");
+								courseCode = keyboard.nextLine();
+								//keyboard.nextLine();//clear buffer
 								flag=true;
 							}
 							catch(InputMismatchException e)
@@ -44,13 +46,19 @@ public class UseCourseSchedule
 						}
 						while (flag==false);
 						flag=false;//Reinitialize flag so we can reuse later
-						course = searchCourses(courses, crn);
-						if(course==null)
+						if(SearchCourses.search(courses, courseCode).size()>0) //check that this course code is valid
 						{
-							System.out.println("Invalid crn.");//could not find a match to the crn
+							selectedCourseCodes.add(courseCode);
+							flag = true;
 						}
-					}
-					try 
+						else
+						{
+							System.out.println("Invalid course code.");//could not find a match to the course code
+							
+						}
+				}while(flag==false);
+				//	}
+				/*	try 
 					{
 						schedule.addCourse(course);//add course to the schedule
 						System.out.println(course);//print or gui print
@@ -60,10 +68,19 @@ public class UseCourseSchedule
 					{
 						System.out.println(e);
 					}
-					System.out.println("Press any key to continue adding courses or press 'e' to exit.");
+				*/
+					System.out.println("Press any key to continue adding courses or press 'f' to finish.");
 					choice = keyboard.nextLine();
 				}
-				while(choice.toLowerCase().charAt(0)!='e');
+				while(choice.toLowerCase().charAt(0)!='f');
+				
+				
+				//now get the schedule
+				schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
+				System.out.println(schedule);
+				
+				
+				keyboard.close();
 			}
 			//connection failed
 			catch(SQLException e)
@@ -72,6 +89,7 @@ public class UseCourseSchedule
 			}
 		
 	}
+	/*
 	public static Course searchCourses(ArrayList<Course> courses, Integer crn)
 	{	
 		for(Course c : courses)
@@ -82,5 +100,21 @@ public class UseCourseSchedule
 			}
 		}
 		return null;
-	}
+	}*/
+	
+	/*//commenting this out and extracting to a class with a static method so all the classes can use the algorithm
+	public static ArrayList<Course> searchCourses(ArrayList<Course> courses, String courseCode)
+	{
+		ArrayList<Course> selectedCourses = new ArrayList<Course>();
+		
+		for(Course course : courses)
+		{
+			if(course.getCode().equalsIgnoreCase(courseCode))
+			{
+				selectedCourses.add(course);
+			}
+		}
+		
+		return selectedCourses;
+	}*/
 }

@@ -83,7 +83,8 @@ public class Course implements Comparable<Course>
 	public String toString()
 	{
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append("CRN: " + getCRN() 
+		sbuild.append("Time Slot: "+timeSlot+
+				"\nCRN: " + getCRN() 
 					+ "\nCode: " + getCode()
 					+ "\nTitle: " + getTitle());
 		return sbuild.toString();

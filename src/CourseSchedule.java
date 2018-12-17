@@ -119,7 +119,7 @@ public class CourseSchedule {
 		output.append(semester+":\n");
 		for(Course course: courses)
 		{
-			output.append(course+"\n");
+			output.append("\t"+course+"\n\n");
 		}
 		
 		return output.toString();
