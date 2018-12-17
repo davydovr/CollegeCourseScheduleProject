@@ -22,12 +22,10 @@ public class ScheduleUsingDB extends JFrame {
 
 	private JFrame frame;
 	private JPanel panel;
-	private JPanel tablePanel;
 	private JLabel enterCourse;
 	private JButton go;
 	private JTable coursesTable;
 	private DefaultTableModel modelTable;
-	private RuthCourseObjects ruthCourses;
 	private JTextField userInputCourse;
 	private String [] tableHeadings = {"CRN", "Course Code", "Course Name", "Professor", "TimeSlot", "Credits"};
 
