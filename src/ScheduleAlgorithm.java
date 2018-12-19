@@ -3,6 +3,9 @@ import java.util.Collections;
 
 public class ScheduleAlgorithm {
 
+	//? does the getCode() return the right value for the array to remove?
+	// instantiated to avoid null getters
+	private static ArrayList<String> reqCourses = new ArrayList<String>(); // changed requestedCourses to be accessible
 	/*-match based on course code
      -put in all codes (optional times)
      - if times is selected or only one option grab that course
@@ -14,13 +17,15 @@ if still more to put in and all equally important
 	 */
 	public  static CourseSchedule createSchedule(ArrayList<String> requestedCourses, ArrayList<Course> courses, String semester )
 	{
+		reqCourses = requestedCourses;
+		
 		ArrayList<ArrayList<Course>> allCourses = new ArrayList<ArrayList<Course>>(); //this will hold the arrayLists of all
 				//the arraylists of the courses that match the users requested courses
 		
 		//get an individual array of all the options available for each requested course code
-		for(int i =0; i< requestedCourses.size(); i++)
+		for(int i =0; i< reqCourses.size(); i++)
 		{	
-			ArrayList<Course> courseOptions = searchCourses(courses, requestedCourses.get(i));
+			ArrayList<Course> courseOptions = searchCourses(courses, reqCourses.get(i));
 			allCourses.add(courseOptions);
 		}
 		
@@ -35,13 +40,13 @@ if still more to put in and all equally important
 		
 		ArrayList<Course> coursesToAdd;
 		
-		boolean courseAdded;
+		//boolean courseAdded;
 		
 		//we will go through and keep on trying to add the courses until the arrayList is empty
 		for(int i =0; i< allCourses.size();i++) 
 		{	
 			coursesToAdd = allCourses.get(i); //get the first arraylist of the courses that were selected for this user to choose from
-			courseAdded = false; //reset the flag for each new courseCode we are trying to add to the schedule
+			//courseAdded = false; //reset the flag for each new courseCode we are trying to add to the schedule
 			
 			//loop through the individual array to try to add the course to the schedule.
 			//once its been added successfully, break out of loop
@@ -49,7 +54,8 @@ if still more to put in and all equally important
 			{	
 				try {
 					courseSchedule.addCourse(coursesToAdd.get(j));
-					courseAdded = true;
+					reqCourses.remove(coursesToAdd.get(j).getCode());
+					//courseAdded = true;
 					break;
 				}catch(TimeslotConflictException e)
 				{
@@ -60,7 +66,7 @@ if still more to put in and all equally important
 				}
 			}
 			
-			if(!courseAdded)
+			//if(!courseAdded) //? if course was added, remove from requestedCourses arraylist
 			{
 				//what to do? this course was not able to be added in a way that doesn't conflict
 				//display error message of sorts or collect all the courses that weren't added and somehow send that back
@@ -71,6 +77,11 @@ if still more to put in and all equally important
 		return courseSchedule;
 		
 		
+	}
+	
+	public static ArrayList<String> getRequestedCourses()
+	{
+		return reqCourses;
 	}
 	
 	
