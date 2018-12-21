@@ -78,7 +78,6 @@ public class UseCourseSchedule
 				//now get the schedule
 				schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
 				System.out.println(schedule); //!display what's left in requestedCourses. if it's not empty, just show the string
-				selectedCourseCodes = ScheduleAlgorithm.getRequestedCourses(); //? problem to reset this?
 				if(!selectedCourseCodes.isEmpty())
 				{
 					System.out.println("The following courses could not be added:\n" + selectedCourseCodes);

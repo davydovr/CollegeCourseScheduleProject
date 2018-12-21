@@ -3,7 +3,6 @@ import java.util.Collections;
 
 public class ScheduleAlgorithm {
 
-	//? does the getCode() return the right value for the array to remove?
 	// instantiated to avoid null getters
 	private static ArrayList<String> reqCourses = new ArrayList<String>(); // changed requestedCourses to be accessible
 	/*-match based on course code
@@ -25,6 +24,7 @@ if still more to put in and all equally important
 		//get an individual array of all the options available for each requested course code
 		for(int i =0; i< reqCourses.size(); i++)
 		{	
+			reqCourses.set(i, reqCourses.get(i).toUpperCase());
 			ArrayList<Course> courseOptions = searchCourses(courses, reqCourses.get(i));
 			allCourses.add(courseOptions);
 		}
@@ -55,7 +55,6 @@ if still more to put in and all equally important
 				try {
 					courseSchedule.addCourse(coursesToAdd.get(j));
 					reqCourses.remove(coursesToAdd.get(j).getCode());
-					//courseAdded = true;
 					break;
 				}catch(TimeslotConflictException e)
 				{
@@ -66,7 +65,7 @@ if still more to put in and all equally important
 				}
 			}
 			
-			//if(!courseAdded) //? if course was added, remove from requestedCourses arraylist
+			//if(!courseAdded)
 			{
 				//what to do? this course was not able to be added in a way that doesn't conflict
 				//display error message of sorts or collect all the courses that weren't added and somehow send that back
@@ -78,12 +77,6 @@ if still more to put in and all equally important
 		
 		
 	}
-	
-	public static ArrayList<String> getRequestedCourses()
-	{
-		return reqCourses;
-	}
-	
 	
 	public static ArrayList<Course> searchCourses(ArrayList<Course> courses, String courseCode)
 	{
