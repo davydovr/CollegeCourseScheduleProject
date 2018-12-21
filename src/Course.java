@@ -12,6 +12,9 @@ public class Course implements Comparable<Course>
 	
 	public Course(int cRN, String code, String title, String professor, Integer timeSlot, Integer credits)
 	{
+		if(code == null || title == null || professor == null || timeSlot == null || credits == null)
+			throw new InvalidCourseException();
+		
 		this.cRN = cRN;
 		this.code = code;
 		this.title = title;
