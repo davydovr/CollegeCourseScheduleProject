@@ -25,7 +25,7 @@ if still more to put in and all equally important
 		for(int i =0; i< reqCourses.size(); i++)
 		{	
 			reqCourses.set(i, reqCourses.get(i).toUpperCase());
-			ArrayList<Course> courseOptions = searchCourses(courses, reqCourses.get(i));
+			ArrayList<Course> courseOptions = SearchCourses.search(courses, reqCourses.get(i));
 			allCourses.add(courseOptions);
 		}
 		
@@ -76,21 +76,6 @@ if still more to put in and all equally important
 		return courseSchedule;
 		
 		
-	}
-	
-	public static ArrayList<Course> searchCourses(ArrayList<Course> courses, String courseCode)
-	{
-		ArrayList<Course> selectedCourses = new ArrayList<Course>();
-		
-		for(Course course : courses)
-		{
-			if(course.getCode().equalsIgnoreCase(courseCode))
-			{
-				selectedCourses.add(course);
-			}
-		}
-		
-		return selectedCourses;
 	}
 	
 }

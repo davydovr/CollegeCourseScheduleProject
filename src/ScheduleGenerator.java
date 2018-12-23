@@ -4,13 +4,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +39,9 @@ public class ScheduleGenerator {
 	private JLabel lblEnterCourse;
 	private JButton goButton;
 	private JButton doneButton;
+	private ArrayList<Course> courses;
+	private InstantiateCourseObjects fillArray;
+	private ArrayList<String> selectedCourseCodes;
 
 	//LIST PANEL
 	private JPanel listPanel;
@@ -43,6 +49,9 @@ public class ScheduleGenerator {
 	private DefaultTableModel modelTable;
 	private String [] tableHeadings = {"CRN", "Course Code", "Course Name", "Professor", "TimeSlot", "Credits"};
 	private JLabel lblSelectedCourses;
+	private JButton showScheduleButton;
+	private CourseSchedule schedule;
+	String semester = "Fall 2018";
 
 	//CHART PANEL
 	private JPanel chartPanel;
@@ -61,10 +70,17 @@ public class ScheduleGenerator {
 	public void stepOne() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 450, 300);
+		//**GET SIZE FROM OLD GUI 
+		//frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(600, 600, 550, 500);
 		frame.setTitle("Course Scheduler");
 
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
+
+		welcomePanel = new JPanel();
+		frame.getContentPane().add(welcomePanel);
+		welcomePanel.setLayout(null); 		//means absolute layout!
+
 
 		listPanel = new JPanel();
 		frame.getContentPane().add(listPanel);
@@ -81,39 +97,48 @@ public class ScheduleGenerator {
 
 	public void welcomePanelSetup() {
 
-		welcomePanel = new JPanel();
+		//Initialize
 		lblEnterCourse = new JLabel("Enter Course:");
 		textFieldUserInput = new JTextField();
 		goButton = new JButton("Go!");
 		doneButton = new JButton("Done");
 
-		frame.getContentPane().add(welcomePanel);
-		welcomePanel.setLayout(null); 		//means absolute layout!
 
-
+		//Location
 		lblEnterCourse.setBounds(46, 77, 84, 16);
 		textFieldUserInput.setBounds(142, 72, 130, 26);
 		goButton.setBounds(284, 63, 75, 47);
 		doneButton.setBounds(129, 151, 117, 29);
 
+		//Add elements to panel
 		welcomePanel.add(lblEnterCourse);
 		welcomePanel.add(textFieldUserInput);
 		welcomePanel.add(goButton);
 		welcomePanel.add(doneButton);
 
+		//these are the courses that the user wishes to take
+		selectedCourseCodes= new ArrayList<String>(); 
+		
+		//Connect to the database and get all the courses
+		databaseConnection();
+		
 		//Makes Go and Done buttons responsive
-		setActionListener();
+		setWelcomePanelActionListener();
+		
 	}
 
 	//welcomePanel GO button 
-	private void setActionListener() {
-		//listens out for an enter key
+	private void setWelcomePanelActionListener() {
+
+		//Listens out for an enter key on the textfield. 
+		//Calls to add the inputted course to the arraylist 
+
 		textFieldUserInput.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					textFieldUserInput.setText("");		//to clear field after input 
-					theAction();
+					theWelcomePanelAction();
 				}
 			}
 		});
@@ -123,10 +148,11 @@ public class ScheduleGenerator {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				textFieldUserInput.setText("");		//to clear field after input 
-				theAction();
+				theWelcomePanelAction();
 			}
 		});
 
+		//Switch panels
 		doneButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -139,31 +165,113 @@ public class ScheduleGenerator {
 
 	}//end setActionListener
 
-	//What happens once Go and Done are clicked
-	private void theAction() {
+
+	private void databaseConnection() {
+		try //create connection
+		{
+			//query
+			ConnectDB connectDB = new ConnectDB("jdbc:sqlserver://localhost;databaseName=CourseSchedule;integratedSecurity=true");
+			fillArray = new InstantiateCourseObjects(connectDB);
+			courses = fillArray.getCourses();//courses in the database to compare to
+		}
+
+		//connection failed
+		catch(SQLException e) {
+			System.out.println(e);
+		}
 
 	}
+
+	/**
+	 * What happens once GO or the Enter key are pressed on Welcome Panel
+	 * that course code is added to the arraylist 
+	 */
+	private void theWelcomePanelAction() {
+
+		if (selectedCourseCodes.size() <= 6) {
+			//check that this course code is valid 
+			if (SearchCourses.search(courses, textFieldUserInput.toString()).size()>0) {
+				selectedCourseCodes.add(textFieldUserInput.toString());
+			}
+			else {
+				//could not find a match to the course code
+				JOptionPane.showMessageDialog(null, "Invalid course code.");
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Exeeded credit limit. Press Done to see schedule.");
+		}
+	}//end theWelcomePanelAction
+
+
 
 	public void listPanelSetup() {
 
 		lblSelectedCourses = new JLabel("Selected Courses");
 		lblSelectedCourses.setBounds(131, 6, 126, 27);
 
+		showScheduleButton = new JButton("Show Schedule");
+		showScheduleButton.setBounds(180, 313, 117, 29);
+		
+		
 		modelTable = new DefaultTableModel(tableHeadings, 0);	//to show outline of table but no information inside yet
 		listPanel.setLayout(null);
+		
 		coursesTable = new JTable(modelTable);
 		coursesTable.setEnabled(false);	//not to let users tamper with the output
 
 		JScrollPane scrollPane = new JScrollPane(coursesTable);
 		scrollPane.setBounds(6, 45, 600, 190);
 
-		listPanel.add(scrollPane);		//displays the top header
+		listPanel.add(showScheduleButton);
 		listPanel.add(lblSelectedCourses);
+		listPanel.add(scrollPane);		//displays the top header
+		
+		listPanel.add(showScheduleButton);
+		
+		
+		listPanelDisplay();
+		listPanelActionListener();
+		
 
 		//GET THE RESULTS OF THE ARRAYLIST OF COURSES AND DISPLAY THAT HERE
 
 	}
 
+	private void listPanelDisplay() {
+		//now get the CourseSchedule object schedule
+		schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
+		
+		for (int x = 0; x < schedule.getCourses().size(); x++) {
+			Vector<Comparable> newRow = new Vector <Comparable>();
+			newRow.add(schedule.getCourses().get(x).getCRN());
+			newRow.add(schedule.getCourses().get(x).getCode());
+			newRow.add(schedule.getCourses().get(x).getTitle());
+			newRow.add(schedule.getCourses().get(x).getProfessor());
+			newRow.add(schedule.getCourses().get(x).getTimeSlot());
+			newRow.add(schedule.getCourses().get(x).getCredits());
+			modelTable.addRow(newRow);	
+		}		
+		modelTable.fireTableDataChanged();
+
+		//to resize the columns to fit the contents 
+		for (int x = 0; x < tableHeadings.length; x++) 
+			packColumn(coursesTable, x, 3);	
+	}
+	
+	private void listPanelActionListener() {
+		//Switch panels
+		showScheduleButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//move on to the next panel
+				chartPanel.setVisible(true);
+				listPanel.setVisible(false);
+			}
+		});
+	}
+	
+	
 	public void chartPanelSetup() {
 		chartTableModel = new DefaultTableModel(chartTableHeadings, 0);
 
@@ -190,9 +298,10 @@ public class ScheduleGenerator {
 		Vector <Comparable> newRow3 = new Vector <Comparable> ();// 6-8
 		Vector <Comparable> newRow4 = new Vector <Comparable> ();// 8-10
 
+		//schedule.getCourses()
+		
 		//timeslot 5 (3 - 4) 
-		ArrayList <Course> courses = new ArrayList <Course> ();
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 5) {
 				newRow1.add("3:10-4:15");
 				newRow1.add(c.getTitle());
@@ -203,7 +312,7 @@ public class ScheduleGenerator {
 		chartTableModel.addRow(newRow1);
 
 		//timeslot 6 (4 - 5) 
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 6) {
 				newRow2.add("4:25-5:30");
 				newRow2.add(c.getTitle());
@@ -214,14 +323,14 @@ public class ScheduleGenerator {
 		chartTableModel.addRow(newRow2);
 
 		//timeslot 10 and 14 (6 - 8) 
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 10) {
 				newRow3.add("6:00-8:15");
 				newRow3.add(c.getTitle());
 				break;
 			}
 		}
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 14) {
 				newRow3.add(c.getTitle());
 				break;
@@ -230,14 +339,14 @@ public class ScheduleGenerator {
 		chartTableModel.addRow(newRow3);
 
 		//timeslot 11 and 16 (8 - 10) 
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 11) {
 				newRow4.add("8:20-10:30");
 				newRow4.add(c.getTitle());
 				break;
 			}
 		}
-		for (Course c : courses) {
+		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 16) {
 				newRow4.add(c.getTitle());
 				break;
@@ -250,8 +359,6 @@ public class ScheduleGenerator {
 		for (int x = 0; x < chartTableHeadings.length; x++) {
 			packColumn(chartTable, x, 3);	//3 is the margin
 		}
-
-
 	}
 
 
@@ -269,7 +376,7 @@ public class ScheduleGenerator {
 		DefaultTableColumnModel colModel = (DefaultTableColumnModel)table.getColumnModel();
 		TableColumn col = colModel.getColumn(vColIndex);
 		int width = 0;
-
+	
 		// Get width of column header
 		TableCellRenderer renderer = col.getHeaderRenderer();
 		if (renderer == null) {
@@ -278,7 +385,7 @@ public class ScheduleGenerator {
 		java.awt.Component comp = renderer.getTableCellRendererComponent(
 				table, col.getHeaderValue(), false, false, 0, 0);
 		width = comp.getPreferredSize().width;
-
+	
 		// Get maximum width of column data
 		for (int r=0; r<table.getRowCount(); r++) {
 			renderer = table.getCellRenderer(r, vColIndex);
@@ -286,10 +393,10 @@ public class ScheduleGenerator {
 					table, table.getValueAt(r, vColIndex), false, false, r, vColIndex);
 			width = Math.max(width, comp.getPreferredSize().width);
 		}
-
+	
 		// Add margin
 		width += 2 * margin;
-
+	
 		// Set the width
 		col.setPreferredWidth(width);
 	}
