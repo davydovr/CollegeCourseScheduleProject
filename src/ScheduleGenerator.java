@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import java.awt.CardLayout;
+import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -20,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import ScheduleCompMethProject.src.Course;
 
 import javax.swing.JButton;
 
@@ -63,8 +63,23 @@ public class ScheduleGenerator {
 
 
 	public ScheduleGenerator() {
-
+		
+		//Connect to the database and get all the courses
+		databaseConnection();
 		stepOne();
+	}
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ScheduleGenerator window = new ScheduleGenerator();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public void stepOne() {
@@ -115,12 +130,9 @@ public class ScheduleGenerator {
 		welcomePanel.add(textFieldUserInput);
 		welcomePanel.add(goButton);
 		welcomePanel.add(doneButton);
-
+		
 		//these are the courses that the user wishes to take
 		selectedCourseCodes= new ArrayList<String>(); 
-		
-		//Connect to the database and get all the courses
-		databaseConnection();
 		
 		//Makes Go and Done buttons responsive
 		setWelcomePanelActionListener();
@@ -137,8 +149,8 @@ public class ScheduleGenerator {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					textFieldUserInput.setText("");		//to clear field after input 
 					theWelcomePanelAction();
+					textFieldUserInput.setText("");		//to clear field after input 
 				}
 			}
 		});
@@ -147,8 +159,8 @@ public class ScheduleGenerator {
 		goButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				textFieldUserInput.setText("");		//to clear field after input 
 				theWelcomePanelAction();
+				textFieldUserInput.setText("");		//to clear field after input 
 			}
 		});
 
@@ -157,6 +169,7 @@ public class ScheduleGenerator {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//move on to the next panel
+				listPanelDisplay();
 				listPanel.setVisible(true);
 				welcomePanel.setVisible(false);
 			}
@@ -188,10 +201,13 @@ public class ScheduleGenerator {
 	 */
 	private void theWelcomePanelAction() {
 
+		String selectedCode = textFieldUserInput.getText();
 		if (selectedCourseCodes.size() <= 6) {
-			//check that this course code is valid 
-			if (SearchCourses.search(courses, textFieldUserInput.toString()).size()>0) {
-				selectedCourseCodes.add(textFieldUserInput.toString());
+			//check that this course code is valid
+			ArrayList<Course> returnedCourses= SearchCourses.search(courses, selectedCode);
+			if (returnedCourses.size()>0) {
+				selectedCourseCodes.add(textFieldUserInput.getText());
+				JOptionPane.showMessageDialog(null, "Course added successfully.");
 			}
 			else {
 				//could not find a match to the course code
@@ -265,6 +281,7 @@ public class ScheduleGenerator {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//move on to the next panel
+				chartPanelSetup();
 				chartPanel.setVisible(true);
 				listPanel.setVisible(false);
 			}

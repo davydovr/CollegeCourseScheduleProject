@@ -22,7 +22,7 @@ if still more to put in and all equally important
 				//the arraylists of the courses that match the users requested courses
 		
 		//get an individual array of all the options available for each requested course code
-		for(int i =0; i< reqCourses.size(); i++)
+		for(int i=0; i< reqCourses.size(); i++)
 		{	
 			reqCourses.set(i, reqCourses.get(i).toUpperCase());
 			ArrayList<Course> courseOptions = SearchCourses.search(courses, reqCourses.get(i));

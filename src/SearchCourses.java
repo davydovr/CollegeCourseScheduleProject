@@ -10,7 +10,11 @@ public class SearchCourses {
 		{
 			if(course.getCode().equalsIgnoreCase(courseCode))
 			{
-				selectedCourses.add(course);
+				if(course.getTimeSlot()==5||course.getTimeSlot()==6 || course.getTimeSlot()==10 ||
+						course.getTimeSlot()==11 || course.getTimeSlot()==16 || course.getTimeSlot()== 14)
+				{
+					selectedCourses.add(course);
+				}
 			}
 		}
 		
