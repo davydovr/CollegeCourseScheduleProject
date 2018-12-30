@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -67,6 +66,8 @@ public class ScheduleGenerator {
 		//Connect to the database and get all the courses
 		databaseConnection();
 		stepOne();
+		
+		
 	}
 	
 	public static void main(String[] args) {
@@ -106,7 +107,7 @@ public class ScheduleGenerator {
 
 		welcomePanelSetup();
 		listPanelSetup();
-		chartPanelSetup();
+	
 
 	}
 
@@ -204,7 +205,7 @@ public class ScheduleGenerator {
 		String selectedCode = textFieldUserInput.getText();
 		if (selectedCourseCodes.size() <= 6) {
 			//check that this course code is valid
-			ArrayList<Course> returnedCourses= SearchCourses.search(courses, selectedCode);
+			ArrayList <Course> returnedCourses= SearchCourses.search(courses, selectedCode);
 			if (returnedCourses.size()>0) {
 				selectedCourseCodes.add(textFieldUserInput.getText());
 				JOptionPane.showMessageDialog(null, "Course added successfully.");
@@ -310,12 +311,10 @@ public class ScheduleGenerator {
 		times.add("8:20-10:30");
 
 		//The rows of the table 
-		Vector <Comparable> newRow1 = new Vector <Comparable> ();//	3-4
-		Vector <Comparable> newRow2 = new Vector <Comparable> ();//	4-5
-		Vector <Comparable> newRow3 = new Vector <Comparable> ();// 6-8
-		Vector <Comparable> newRow4 = new Vector <Comparable> ();// 8-10
-
-		//schedule.getCourses()
+		Vector <Comparable> newRow1 = new Vector <Comparable> ();	//	3-4
+		Vector <Comparable> newRow2 = new Vector <Comparable> ();	//	4-5
+		Vector <Comparable> newRow3 = new Vector <Comparable> ();	// 6-8
+		Vector <Comparable> newRow4 = new Vector <Comparable> ();	// 8-10
 		
 		//timeslot 5 (3 - 4) 
 		for (Course c : schedule.getCourses()) {
