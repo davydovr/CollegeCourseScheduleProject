@@ -20,7 +20,7 @@ if still more to put in and all equally important
 	public  static CourseSchedule createSchedule(ArrayList<String> requestedCourses, ArrayList<Course> courses, String semester )
 	{
 		reqCourses = requestedCourses;
-
+			
 		ArrayList<ArrayList<Course>> allCourses = new ArrayList<ArrayList<Course>>();
 		//this will hold the arrayLists of all
 				//the arraylists of the courses that match the users requested courses
@@ -49,8 +49,7 @@ if still more to put in and all equally important
 		for(int i =0; i< allCourses.size();i++) 
 		{	
 			coursesToAdd = allCourses.get(i); //get the first arraylist of the courses that were selected for this user to choose from
-			//courseAdded = false; //reset the flag for each new courseCode we are trying to add to the schedule
-			
+						
 			//loop through the individual array to try to add the course to the schedule.
 			//once its been added successfully, break out of loop
 			for(int j = 0; j< coursesToAdd.size();j++)
@@ -68,22 +67,11 @@ if still more to put in and all equally important
 				}
 				
 			}
-			//if(!courseAdded)
-			{
-				//what to do? this course was not able to be added in a way that doesn't conflict
-				//display error message of sorts or collect all the courses that weren't added and somehow send that back
-				//perhaps to the gui to be gathered for one error message at the bottom of the schedule.....???
-			}
+	
 		}
-		
 		return courseSchedule;
 		
 		
-	}
-	//return a shallow copy of what courses were not added
-	public static ArrayList<String>getRequestedCourses()
-	{
-		return reqCourses;
 	}
 	
 }

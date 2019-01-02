@@ -210,7 +210,7 @@ public class ScheduleGenerator {
 	 */
 	private void theWelcomePanelAction() {
 
-		String selectedCode = textFieldUserInput.getText();
+		String selectedCode = textFieldUserInput.getText().toUpperCase();
 		
 		//formats the user input properly for the course objects
 		int position=selectedCode.indexOf(" ");
@@ -231,27 +231,26 @@ public class ScheduleGenerator {
 			selectedCode=(selectedCode.substring(0,4)+"-"+selectedCode.substring(4));
 		}
 		//dash found keep as is
-
 		
 			//check that this course code is valid
 			ArrayList <Course> returnedCourses= SearchCourses.search(courses, selectedCode);
 			if (returnedCourses.size()>0) {
-				requestedCourses.addAll(returnedCourses);
-				selectedCourseCodes.add(selectedCode.toUpperCase());
-				JOptionPane.showMessageDialog(null, "Course added successfully.");
+				if(!selectedCourseCodes.contains(selectedCode))
+				{
+					requestedCourses.addAll(returnedCourses);
+					selectedCourseCodes.add(selectedCode);
+					JOptionPane.showMessageDialog(null, "Course added successfully.\n\nRequested Course Count: "+selectedCourseCodes.size());
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "This course was already added.");
+				}
 			}
 			else {
 				//could not find a match to the course code
 				JOptionPane.showMessageDialog(null, "Invalid course code.");
 			}
 		
-		if(selectedCourseCodes.size() == 6)
-		{
-			JOptionPane.showMessageDialog(null, "Exceeded credit limit.");
-			listPanelDisplay();
-			listPanel.setVisible(true);
-			welcomePanel.setVisible(false);	
-		}
 	}//end theWelcomePanelAction
 
 
@@ -337,7 +336,7 @@ public class ScheduleGenerator {
 	
 	public void chartPanelSetup() {
 		//now get the CourseSchedule object schedule	
-			schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
+		schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
 		chartTableModel = new DefaultTableModel(chartTableHeadings, 0);
 		chartTable = new JTable(chartTableModel);
 		chartTable.setEnabled(false); 	//user cannot edit the table
@@ -401,7 +400,7 @@ public class ScheduleGenerator {
 		}
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 14) {
-				if(newRow3.size()<3)
+				if(newRow3.size()!=2)
 				{
 					newRow3.add("");
 				}
@@ -420,9 +419,9 @@ public class ScheduleGenerator {
 		}
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 16) {
-				if(newRow3.size()<3)
+				if(newRow4.size()!=2)
 				{
-					newRow3.add("");
+					newRow4.add("");
 				}
 				newRow4.add(c.getTitle());
 				break;
