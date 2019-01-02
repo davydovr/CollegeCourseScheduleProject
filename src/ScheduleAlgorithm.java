@@ -3,6 +3,8 @@ import java.util.Collections;
 
 public class ScheduleAlgorithm {
 
+	//requested coures arrayList
+		//private static ArrayList<Course> requestedCourses = new ArrayList<Course>();
 	// instantiated to avoid null getters
 	private static ArrayList<String> reqCourses = new ArrayList<String>(); // changed requestedCourses to be accessible
 	/*-match based on course code
@@ -14,11 +16,13 @@ if still more to put in and all equally important
           -count how many each coursecode comes up
           -pick the one that comes up least 
 	 */
+	
 	public  static CourseSchedule createSchedule(ArrayList<String> requestedCourses, ArrayList<Course> courses, String semester )
 	{
 		reqCourses = requestedCourses;
-		
-		ArrayList<ArrayList<Course>> allCourses = new ArrayList<ArrayList<Course>>(); //this will hold the arrayLists of all
+
+		ArrayList<ArrayList<Course>> allCourses = new ArrayList<ArrayList<Course>>();
+		//this will hold the arrayLists of all
 				//the arraylists of the courses that match the users requested courses
 		
 		//get an individual array of all the options available for each requested course code
@@ -34,7 +38,6 @@ if still more to put in and all equally important
 		//since otherwise (if we keep selecting the smallest size array) we will not know which courses were taken care of yet
 		//unless we remove them but them the loop will be messed up.....
 		Collections.sort(allCourses, new ArrayListSizeComparator());
-		
 		//actual schedule for the user
 		CourseSchedule courseSchedule = new CourseSchedule(18, semester);
 		
@@ -63,8 +66,8 @@ if still more to put in and all equally important
 				{
 					System.out.println(e); //credits overflow, what do we want it to do now?
 				}
+				
 			}
-			
 			//if(!courseAdded)
 			{
 				//what to do? this course was not able to be added in a way that doesn't conflict
@@ -76,6 +79,11 @@ if still more to put in and all equally important
 		return courseSchedule;
 		
 		
+	}
+	//return a shallow copy of what courses were not added
+	public static ArrayList<String>getRequestedCourses()
+	{
+		return reqCourses;
 	}
 	
 }

@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableColumnModel;
@@ -53,6 +54,8 @@ public class ScheduleGenerator {
 	private DefaultTableModel chartTableModel;
 	private String [] chartTableHeadings = {"Time", "Tuesday", "Thursday"};
 	private JButton backButton;
+	
+	private ArrayList<Course> requestedCourses;
 
 
 
@@ -110,7 +113,7 @@ public class ScheduleGenerator {
 	public void welcomePanelSetup() {
 
 		//Initialize
-		lblEnterCourse = new JLabel("Enter Course:");
+		lblEnterCourse = new JLabel("Enter Course Code:");
 		textFieldUserInput = new JTextField();
 		goButton = new JButton("Go!");
 		doneButton = new JButton("Done");
@@ -123,10 +126,10 @@ public class ScheduleGenerator {
 
 
 		//Location
-		lblEnterCourse.setBounds(58, 90, 117, 29);
+		lblEnterCourse.setBounds(30, 88, 148, 29);
 		textFieldUserInput.setBounds(188, 84, 171, 42);
 		goButton.setBounds(367, 82, 75, 47);
-		doneButton.setBounds(357, 186, 85, 52);
+		doneButton.setBounds(210, 181, 85, 52);
 
 		
 		//Add elements to panel
@@ -208,20 +211,46 @@ public class ScheduleGenerator {
 	private void theWelcomePanelAction() {
 
 		String selectedCode = textFieldUserInput.getText();
-		if (selectedCourseCodes.size() <= 6) {
+		
+		//formats the user input properly for the course objects
+		int position=selectedCode.indexOf(" ");
+		int position2 =selectedCode.indexOf("-");
+		//space found
+		if(position!=-1)
+		{
+			selectedCode=(selectedCode.substring(0, position)+"-"+selectedCode.substring(position+1));
+		}
+		//blank was entered//or non that fits the three formats
+		else if(selectedCode.length()<5)
+		{
+			//just so that it does not enter the next if
+		}
+		//no dash and not space found
+		else if(position2==-1)
+		{
+			selectedCode=(selectedCode.substring(0,4)+"-"+selectedCode.substring(4));
+		}
+		//dash found keep as is
+
+		
 			//check that this course code is valid
 			ArrayList <Course> returnedCourses= SearchCourses.search(courses, selectedCode);
 			if (returnedCourses.size()>0) {
-				selectedCourseCodes.add(textFieldUserInput.getText());
+				requestedCourses.addAll(returnedCourses);
+				selectedCourseCodes.add(selectedCode.toUpperCase());
 				JOptionPane.showMessageDialog(null, "Course added successfully.");
 			}
 			else {
 				//could not find a match to the course code
 				JOptionPane.showMessageDialog(null, "Invalid course code.");
 			}
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Exeeded credit limit. Press Done to see schedule.");
+		
+		if(selectedCourseCodes.size() == 6)
+		{
+			JOptionPane.showMessageDialog(null, "Exceeded credit limit.");
+			listPanelDisplay();
+			listPanel.setVisible(true);
+			welcomePanel.setVisible(false);	
 		}
 	}//end theWelcomePanelAction
 
@@ -230,7 +259,7 @@ public class ScheduleGenerator {
 	public void listPanelSetup() {
 
 		//Initialize
-		lblSelectedCourses = new JLabel("Selected Courses");
+		lblSelectedCourses = new JLabel("Requested Courses");
 		showScheduleButton = new JButton("Show Schedule");
 		modelTable = new DefaultTableModel(tableHeadings, 0);	//to show outline of table but no information inside yet
 		
@@ -239,7 +268,7 @@ public class ScheduleGenerator {
 		showScheduleButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		
 		//Location
-		lblSelectedCourses.setBounds(226, 27, 182, 37);
+		lblSelectedCourses.setBounds(226, 27, 192, 37);
 		showScheduleButton.setBounds(241, 278, 147, 47);
 		
 		
@@ -265,17 +294,20 @@ public class ScheduleGenerator {
 	}
 
 	private void listPanelDisplay() {
-		//now get the CourseSchedule object schedule
-		schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
 		
-		for (int x = 0; x < schedule.getCourses().size(); x++) {
+		//requestedCourses = ScheduleAlgorithm.getRequestedCourses(selectedCourseCodes, courses);
+		if(requestedCourses==null)
+		{	
+			requestedCourses=new ArrayList<Course>();
+		}
+		for (int x = 0; x < requestedCourses.size(); x++) {
 			Vector<Comparable> newRow = new Vector <Comparable>();
-			newRow.add(schedule.getCourses().get(x).getCRN());
-			newRow.add(schedule.getCourses().get(x).getCode());
-			newRow.add(schedule.getCourses().get(x).getTitle());
-			newRow.add(schedule.getCourses().get(x).getProfessor());
-			newRow.add(schedule.getCourses().get(x).getTimeSlot());
-			newRow.add(schedule.getCourses().get(x).getCredits());
+			newRow.add(requestedCourses.get(x).getCRN());
+			newRow.add(requestedCourses.get(x).getCode());
+			newRow.add(requestedCourses.get(x).getTitle());
+			newRow.add(requestedCourses.get(x).getProfessor());
+			newRow.add(requestedCourses.get(x).getTimeSlot());
+			newRow.add(requestedCourses.get(x).getCredits());
 			modelTable.addRow(newRow);	
 		}		
 		modelTable.fireTableDataChanged();
@@ -292,6 +324,10 @@ public class ScheduleGenerator {
 			public void mouseClicked(MouseEvent e) {
 				//move on to the next panel
 				chartPanelSetup();
+				
+				//Add action listener to button
+				backButtonActionListener();
+				
 				chartPanel.setVisible(true);
 				listPanel.setVisible(false);
 			}
@@ -300,7 +336,8 @@ public class ScheduleGenerator {
 	
 	
 	public void chartPanelSetup() {
-		
+		//now get the CourseSchedule object schedule	
+			schedule =  ScheduleAlgorithm.createSchedule(selectedCourseCodes, courses, semester);
 		chartTableModel = new DefaultTableModel(chartTableHeadings, 0);
 		chartTable = new JTable(chartTableModel);
 		chartTable.setEnabled(false); 	//user cannot edit the table
@@ -316,28 +353,28 @@ public class ScheduleGenerator {
 		//Add to panel
 		chartPanel.add(scrollpane);
 		chartPanel.add(backButton);
-		
-		//Add action listener to button
-		backButtonActionListener();
+
 		
 		//to fill the table with info
 
-		ArrayList <String> times = new ArrayList<String> ();
+		/*ArrayList <String> times = new ArrayList<String> ();
 		times.add("3:10-4:15");
 		times.add("4:25-5:30");
 		times.add("6:00-8:15");
-		times.add("8:20-10:30");
+		times.add("8:20-10:30");*/
 
 		//The rows of the table 
 		Vector <Comparable> newRow1 = new Vector <Comparable> ();	//	3-4
 		Vector <Comparable> newRow2 = new Vector <Comparable> ();	//	4-5
 		Vector <Comparable> newRow3 = new Vector <Comparable> ();	// 6-8
 		Vector <Comparable> newRow4 = new Vector <Comparable> ();	// 8-10
-		
+		newRow1.add("3:10-4:15");
+		newRow2.add("4:25-5:30");
+		newRow3.add("6:00-8:15");
+		newRow4.add("8:20-10:30");
 		//timeslot 5 (3 - 4) 
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 5) {
-				newRow1.add("3:10-4:15");
 				newRow1.add(c.getTitle());
 				newRow1.add(c.getTitle());
 				break;
@@ -348,7 +385,6 @@ public class ScheduleGenerator {
 		//timeslot 6 (4 - 5) 
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 6) {
-				newRow2.add("4:25-5:30");
 				newRow2.add(c.getTitle());
 				newRow2.add(c.getTitle());
 				break;
@@ -359,13 +395,16 @@ public class ScheduleGenerator {
 		//timeslot 10 and 14 (6 - 8) 
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 10) {
-				newRow3.add("6:00-8:15");
 				newRow3.add(c.getTitle());
 				break;
 			}
 		}
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 14) {
+				if(newRow3.size()<3)
+				{
+					newRow3.add("");
+				}
 				newRow3.add(c.getTitle());
 				break;
 			}
@@ -375,13 +414,16 @@ public class ScheduleGenerator {
 		//timeslot 11 and 16 (8 - 10) 
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 11) {
-				newRow4.add("8:20-10:30");
 				newRow4.add(c.getTitle());
 				break;
 			}
 		}
 		for (Course c : schedule.getCourses()) {
 			if (c.getTimeSlot() == 16) {
+				if(newRow3.size()<3)
+				{
+					newRow3.add("");
+				}
 				newRow4.add(c.getTitle());
 				break;
 			}
@@ -395,7 +437,17 @@ public class ScheduleGenerator {
 		}
 	}
 	
-	private void backButtonActionListener() {
+	private void backButtonActionListener()
+	{
+		//Switch panels
+		backButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				listPanel.setVisible(true);
+				chartPanel.setVisible(false);
+			}
+		});
 	}//end backButtonActionListener
 
 
