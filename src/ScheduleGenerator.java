@@ -19,14 +19,9 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
-
 import javax.swing.JButton;
+import java.awt.Font;
 
-
-//Make use of the files 
-//ScheduleUsingDB for the list panel
-//ScheduleGUI for the chart panel
 
 public class ScheduleGenerator {
 
@@ -57,7 +52,7 @@ public class ScheduleGenerator {
 	private JTable chartTable;
 	private DefaultTableModel chartTableModel;
 	private String [] chartTableHeadings = {"Time", "Tuesday", "Thursday"};
-
+	private JButton backButton;
 
 
 
@@ -86,12 +81,11 @@ public class ScheduleGenerator {
 	public void stepOne() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//**GET SIZE FROM OLD GUI 
-		//frame.setBounds(100, 100, 450, 300);
-		frame.setBounds(600, 600, 550, 500);
+		 
+		frame.setBounds(5, 5, 650, 400);
 		frame.setTitle("Course Scheduler");
 
-		frame.getContentPane().setLayout(new CardLayout(0, 0));
+		frame.getContentPane().setLayout(new CardLayout(0, 0));		//set the Card Layout to the frame
 
 		welcomePanel = new JPanel();
 		frame.getContentPane().add(welcomePanel);
@@ -104,10 +98,12 @@ public class ScheduleGenerator {
 
 		chartPanel = new JPanel();
 		frame.getContentPane().add(chartPanel);
-
+		chartPanel.setLayout(null);			//absolute layout 
+		
+		
 		welcomePanelSetup();
 		listPanelSetup();
-	
+		//chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
 
 	}
 
@@ -118,22 +114,31 @@ public class ScheduleGenerator {
 		textFieldUserInput = new JTextField();
 		goButton = new JButton("Go!");
 		doneButton = new JButton("Done");
+		
+		
+		//Set font and size
+		lblEnterCourse.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		goButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		doneButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 
 
 		//Location
-		lblEnterCourse.setBounds(46, 77, 84, 16);
-		textFieldUserInput.setBounds(142, 72, 130, 26);
-		goButton.setBounds(284, 63, 75, 47);
-		doneButton.setBounds(129, 151, 117, 29);
+		lblEnterCourse.setBounds(58, 90, 117, 29);
+		textFieldUserInput.setBounds(188, 84, 171, 42);
+		goButton.setBounds(367, 82, 75, 47);
+		doneButton.setBounds(357, 186, 85, 52);
 
+		
 		//Add elements to panel
 		welcomePanel.add(lblEnterCourse);
 		welcomePanel.add(textFieldUserInput);
 		welcomePanel.add(goButton);
 		welcomePanel.add(doneButton);
 		
+		
 		//these are the courses that the user wishes to take
 		selectedCourseCodes= new ArrayList<String>(); 
+		
 		
 		//Makes Go and Done buttons responsive
 		setWelcomePanelActionListener();
@@ -224,34 +229,38 @@ public class ScheduleGenerator {
 
 	public void listPanelSetup() {
 
+		//Initialize
 		lblSelectedCourses = new JLabel("Selected Courses");
-		lblSelectedCourses.setBounds(131, 6, 126, 27);
-
 		showScheduleButton = new JButton("Show Schedule");
-		showScheduleButton.setBounds(180, 313, 117, 29);
-		
-		
 		modelTable = new DefaultTableModel(tableHeadings, 0);	//to show outline of table but no information inside yet
-		listPanel.setLayout(null);
 		
+		//Font and size
+		lblSelectedCourses.setFont(new Font("Lucida Grande", Font.BOLD, 20));
+		showScheduleButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		
+		//Location
+		lblSelectedCourses.setBounds(226, 27, 182, 37);
+		showScheduleButton.setBounds(241, 278, 147, 47);
+		
+		
+		//listPanel.setLayout(null);
+		
+		//The table
 		coursesTable = new JTable(modelTable);
 		coursesTable.setEnabled(false);	//not to let users tamper with the output
-
 		JScrollPane scrollPane = new JScrollPane(coursesTable);
-		scrollPane.setBounds(6, 45, 600, 190);
+		scrollPane.setBounds(25, 76, 600, 190);
 
+		
+		//Add elements to panel
 		listPanel.add(showScheduleButton);
 		listPanel.add(lblSelectedCourses);
 		listPanel.add(scrollPane);		//displays the top header
-		
-		listPanel.add(showScheduleButton);
 		
 		
 		listPanelDisplay();
 		listPanelActionListener();
 		
-
-		//GET THE RESULTS OF THE ARRAYLIST OF COURSES AND DISPLAY THAT HERE
 
 	}
 
@@ -291,17 +300,26 @@ public class ScheduleGenerator {
 	
 	
 	public void chartPanelSetup() {
+		
 		chartTableModel = new DefaultTableModel(chartTableHeadings, 0);
-
-		chartPanel.setLayout(null);		//necessary
 		chartTable = new JTable(chartTableModel);
 		chartTable.setEnabled(false); 	//user cannot edit the table
 
 		JScrollPane scrollpane = new JScrollPane(chartTable);
-		scrollpane.setBounds(54, 90, 442, 176);
+		scrollpane.setBounds(100, 88, 442, 176);
 
+		
+		backButton = new JButton("Back");
+		backButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		backButton.setBounds(17, 22, 89, 36);
+		
+		//Add to panel
 		chartPanel.add(scrollpane);
-
+		chartPanel.add(backButton);
+		
+		//Add action listener to button
+		backButtonActionListener();
+		
 		//to fill the table with info
 
 		ArrayList <String> times = new ArrayList<String> ();
@@ -376,6 +394,9 @@ public class ScheduleGenerator {
 			packColumn(chartTable, x, 3);	//3 is the margin
 		}
 	}
+	
+	private void backButtonActionListener() {
+	}//end backButtonActionListener
 
 
 
