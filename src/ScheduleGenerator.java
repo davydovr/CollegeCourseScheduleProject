@@ -32,9 +32,11 @@ public class ScheduleGenerator {
 	private JPanel welcomePanel;
 	private JTextField textFieldUserInput;
 	private JLabel lblEnterCourse;
+	private JLabel headingLabel1;
+	private JLabel headingLabel2;
 	private JButton goButton;
 	private JButton doneButton;
-	private ArrayList<Course> courses;
+	private ArrayList<Course> courses;					//all the courses from the database
 	private InstantiateCourseObjects fillArray;
 	private ArrayList<String> selectedCourseCodes;
 
@@ -51,11 +53,13 @@ public class ScheduleGenerator {
 	//CHART PANEL
 	private JPanel chartPanel;
 	private JTable chartTable;
-	private DefaultTableModel chartTableModel;
+	private DefaultTableModel chartTableModel; 
 	private String [] chartTableHeadings = {"Time", "Tuesday", "Thursday"};
 	private JButton backButton;
+	private JButton restartButton;
 	
 	private ArrayList<Course> requestedCourses;
+	private JLabel notIncludedCoursesLabel;
 
 
 
@@ -106,18 +110,19 @@ public class ScheduleGenerator {
 		
 		welcomePanelSetup();
 		listPanelSetup();
-		//chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
+		chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
 
 	}
 
 	public void welcomePanelSetup() {
 
 		//Initialize
-		lblEnterCourse = new JLabel("Enter Course Code:");
+		lblEnterCourse = new JLabel("Course Code:");
 		textFieldUserInput = new JTextField();
 		goButton = new JButton("Go!");
 		doneButton = new JButton("Done");
-		
+		headingLabel1 = new JLabel("Please enter the courses that you would like to");
+		headingLabel2 = new JLabel("take this semester in order of importance");
 		
 		//Set font and size
 		lblEnterCourse.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
@@ -126,17 +131,21 @@ public class ScheduleGenerator {
 
 
 		//Location
-		lblEnterCourse.setBounds(30, 88, 148, 29);
-		textFieldUserInput.setBounds(188, 84, 171, 42);
-		goButton.setBounds(367, 82, 75, 47);
-		doneButton.setBounds(210, 181, 85, 52);
-
+		lblEnterCourse.setBounds(92, 114, 117, 29);
+		textFieldUserInput.setBounds(221, 108, 171, 42);
+		goButton.setBounds(404, 106, 75, 47);
+		doneButton.setBounds(256, 196, 85, 52);
+		headingLabel1.setBounds(144, 53, 294, 29);
+		headingLabel2.setBounds(161, 78, 268, 16);
+		
 		
 		//Add elements to panel
 		welcomePanel.add(lblEnterCourse);
 		welcomePanel.add(textFieldUserInput);
 		welcomePanel.add(goButton);
 		welcomePanel.add(doneButton);
+		welcomePanel.add(headingLabel1);
+		welcomePanel.add(headingLabel2);
 		
 		
 		//these are the courses that the user wishes to take
@@ -267,7 +276,7 @@ public class ScheduleGenerator {
 		showScheduleButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		
 		//Location
-		lblSelectedCourses.setBounds(226, 27, 192, 37);
+		lblSelectedCourses.setBounds(226, 27, 207, 37);
 		showScheduleButton.setBounds(241, 278, 147, 47);
 		
 		
@@ -342,17 +351,28 @@ public class ScheduleGenerator {
 		chartTable.setEnabled(false); 	//user cannot edit the table
 
 		JScrollPane scrollpane = new JScrollPane(chartTable);
-		scrollpane.setBounds(100, 88, 442, 176);
-
-		
 		backButton = new JButton("Back");
+		notIncludedCoursesLabel = new JLabel("");
+		JScrollPane scrollpane2 = new JScrollPane(notIncludedCoursesLabel);
+		restartButton = new JButton("Restart");
+		
+		
 		backButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		restartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		
 		backButton.setBounds(17, 22, 89, 36);
+		scrollpane.setBounds(99, 70, 442, 176);
+		notIncludedCoursesLabel.setBounds(99, 271, 447, 79);
+		restartButton.setBounds(67, 288, 117, 29);
+
 		
 		//Add to panel
 		chartPanel.add(scrollpane);
 		chartPanel.add(backButton);
-
+		chartPanel.add(scrollpane2);
+		chartPanel.add(restartButton);
+		
+		restartButtonActionListener();
 		
 		//to fill the table with info
 
@@ -434,6 +454,17 @@ public class ScheduleGenerator {
 		for (int x = 0; x < chartTableHeadings.length; x++) {
 			packColumn(chartTable, x, 3);	//3 is the margin
 		}
+		
+		if (selectedCourseCodes.size() > 0) {
+			String unusedCourses = "";
+			for (int s = 0; s < selectedCourseCodes.size(); s++)
+				unusedCourses += selectedCourseCodes.get(s) + "  ";
+			
+			notIncludedCoursesLabel.setText("The following course(s) could not be added to your schedule due to a time-slot conflict with another course or an overflow of the credit limit. "
+					+ unusedCourses 
+					+ "To generate a different schedule, please RESTART. (It may help to enter the course in a different order to achieve your desired results)"
+					);
+		}
 	}
 	
 	private void backButtonActionListener()
@@ -448,6 +479,24 @@ public class ScheduleGenerator {
 			}
 		});
 	}//end backButtonActionListener
+	
+	private void restartButtonActionListener() {
+		//Switch panels
+		restartButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				//clear previous information
+				selectedCourseCodes = null;
+				modelTable.setRowCount(0);
+				chartTableModel.setRowCount(0); 
+				
+				//change panels
+				welcomePanel.setVisible(true);
+				chartPanel.setVisible(false);
+			}
+		});
+	}
 
 
 
