@@ -82,9 +82,7 @@ public class ScheduleGenerator {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-			
-			
+			}	
 		});
 	}
 
@@ -271,7 +269,7 @@ public class ScheduleGenerator {
 	public void listPanelSetup() {
 
 		//Initialize
-		lblSelectedCourses = new JLabel("Requested Courses");
+		lblSelectedCourses = new JLabel("Available Courses");
 		showScheduleButton = new JButton("Show Schedule");
 		modelTable = new DefaultTableModel(tableHeadings, 0);	//to show outline of table but no information inside yet
 		
