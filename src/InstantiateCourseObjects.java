@@ -16,7 +16,7 @@ public class InstantiateCourseObjects {
 	{
 		this.connectDB=connectDB;
 		courses= new ArrayList<Course>();
-		Connection conn = connectDB.getConnection();
+		Connection conn = this.connectDB.getConnection();
 
 		//query the db
 

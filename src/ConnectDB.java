@@ -2,10 +2,8 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+
 
 public class ConnectDB {
 
@@ -16,7 +14,7 @@ public class ConnectDB {
 	public ConnectDB(String dbURL) throws SQLException{
 		
 		this.dbURL =dbURL;
-		conn = DriverManager.getConnection(dbURL);
+		conn = DriverManager.getConnection(this.dbURL);
 		if (conn == null) 
 		{
 			throw new UnableToConnectException();
