@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -59,7 +60,7 @@ public class ScheduleGenerator {
 	private JButton restartButton;
 	
 	private ArrayList<Course> requestedCourses;
-	private JLabel notIncludedCoursesLabel;
+	private JTextArea notIncludedCoursesLabel;
 
 
 
@@ -82,6 +83,8 @@ public class ScheduleGenerator {
 					e.printStackTrace();
 				}
 			}
+			
+			
 		});
 	}
 
@@ -110,7 +113,7 @@ public class ScheduleGenerator {
 		
 		welcomePanelSetup();
 		listPanelSetup();
-		chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
+		//chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
 
 	}
 
@@ -131,12 +134,12 @@ public class ScheduleGenerator {
 
 
 		//Location
-		lblEnterCourse.setBounds(92, 114, 117, 29);
-		textFieldUserInput.setBounds(221, 108, 171, 42);
-		goButton.setBounds(404, 106, 75, 47);
-		doneButton.setBounds(256, 196, 85, 52);
-		headingLabel1.setBounds(144, 53, 294, 29);
-		headingLabel2.setBounds(161, 78, 268, 16);
+		lblEnterCourse.setBounds(92, 174, 117, 29);
+		textFieldUserInput.setBounds(219, 170, 171, 42);
+		goButton.setBounds(411, 165, 75, 47);
+		doneButton.setBounds(276, 278, 85, 52);
+		headingLabel1.setBounds(193, 72, 293, 29);
+		headingLabel2.setBounds(202, 97, 268, 16);
 		
 		
 		//Add elements to panel
@@ -243,7 +246,8 @@ public class ScheduleGenerator {
 		
 			//check that this course code is valid
 			ArrayList <Course> returnedCourses= SearchCourses.search(courses, selectedCode);
-			if (returnedCourses.size()>0) {
+			if (returnedCourses.size()>0)
+			{
 				if(!selectedCourseCodes.contains(selectedCode))
 				{
 					requestedCourses.addAll(returnedCourses);
@@ -352,23 +356,25 @@ public class ScheduleGenerator {
 
 		JScrollPane scrollpane = new JScrollPane(chartTable);
 		backButton = new JButton("Back");
-		notIncludedCoursesLabel = new JLabel("");
-		JScrollPane scrollpane2 = new JScrollPane(notIncludedCoursesLabel);
+		JScrollPane scrollpane2 = new JScrollPane();
 		restartButton = new JButton("Restart");
 		
 		
 		backButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		restartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		
-		backButton.setBounds(17, 22, 89, 36);
-		scrollpane.setBounds(99, 70, 442, 176);
-		notIncludedCoursesLabel.setBounds(99, 271, 447, 79);
-		restartButton.setBounds(67, 288, 117, 29);
+		backButton.setBounds(25, 22, 89, 36);
+		scrollpane.setBounds(99, 70, 442, 126);
+		scrollpane2.setBounds(99, 2234, 447, 126);
+		restartButton.setBounds(524, 22, 89, 36);
 
 		
 		//Add to panel
 		chartPanel.add(scrollpane);
 		chartPanel.add(backButton);
+		notIncludedCoursesLabel = new JTextArea("");
+		notIncludedCoursesLabel.setBounds(99, 223, 447, 126);
+		chartPanel.add(notIncludedCoursesLabel);
 		chartPanel.add(scrollpane2);
 		chartPanel.add(restartButton);
 		
@@ -460,10 +466,14 @@ public class ScheduleGenerator {
 			for (int s = 0; s < selectedCourseCodes.size(); s++)
 				unusedCourses += selectedCourseCodes.get(s) + "  ";
 			
-			notIncludedCoursesLabel.setText("The following course(s) could not be added to your schedule due to a time-slot conflict with another course or an overflow of the credit limit. "
-					+ unusedCourses 
-					+ "To generate a different schedule, please RESTART. (It may help to enter the course in a different order to achieve your desired results)"
+			notIncludedCoursesLabel.setText("The following course(s) could not be added to your schedule\n due to a time-slot conflict with another course or an overflow of the credit limit:\n "
+					+ "\t"+unusedCourses 
+					+ "\nTo generate a different schedule, please RESTART. \n(It may help to enter the course in a different order to achieve\n your desired results)"
 					);
+		}
+		else
+		{
+			notIncludedCoursesLabel.setText("Thank you for using our program.\n Your courses were successfully added to the schedule.");
 		}
 	}
 	
@@ -487,13 +497,31 @@ public class ScheduleGenerator {
 			public void mouseClicked(MouseEvent e) {
 				
 				//clear previous information
-				selectedCourseCodes = null;
+				/*selectedCourseCodes = new ArrayList<String>(); ;
+				requestedCourses=new ArrayList<Course>(); ;
 				modelTable.setRowCount(0);
 				chartTableModel.setRowCount(0); 
 				
-				//change panels
-				welcomePanel.setVisible(true);
+				//set onclick listeners on
+				//Makes Go and Done buttons responsive
+				setWelcomePanelActionListener();
+			
+				
+				//change panels*/
+				welcomePanel.setVisible(false);
 				chartPanel.setVisible(false);
+				
+				//recalled the main
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ScheduleGenerator window = new ScheduleGenerator();
+							window.frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});	
 			}
 		});
 	}
