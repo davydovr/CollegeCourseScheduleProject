@@ -1,4 +1,6 @@
-
+//uses ConnectDB.java to get the DB connection
+//queries the database for the courses in the table
+//stores the ResultSet in an ArrayList of Courses
 
 import java.sql.Connection;
 import java.sql.ResultSet;

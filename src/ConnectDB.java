@@ -1,4 +1,4 @@
-
+//gets a connection to the database
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,5 +1,4 @@
-
-
+//A Course represents an instance of a course in a schedule
 
 public class Course implements Comparable<Course>
 {

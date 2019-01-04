@@ -1,3 +1,8 @@
+//CourseSchedule - the actual deliverable of the program
+//holds the courses for one user to take in one semester
+//addCourse method will only allow the course to be added if it's approved-
+//doesn't conflict with courses that are already in the schedule
+
 import java.util.ArrayList;
 
 public class CourseSchedule {

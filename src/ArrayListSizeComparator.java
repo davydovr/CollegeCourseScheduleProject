@@ -1,3 +1,5 @@
+//A Comparator which compares ArrayLists of Courses by size
+
 import java.util.Comparator;
 import java.util.ArrayList;
 

@@ -68,11 +68,14 @@ public class ScheduleGenerator {
 		//Connect to the database and get all the courses
 		databaseConnection();
 		stepOne();
-		
-		
+				
 	}
 	
 	public static void main(String[] args) {
+		startProgram();
+	}
+
+	private static void startProgram() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -110,7 +113,7 @@ public class ScheduleGenerator {
 		
 		welcomePanelSetup();
 		listPanelSetup();
-		//chartPanelSetup();		//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
+		//chartPanelSetup();	//this line makes the table empty at runtime. But in order to format it, uncomment it to see the layout in Design view. 
 
 	}
 
@@ -161,7 +164,7 @@ public class ScheduleGenerator {
 	private void setWelcomePanelActionListener() {
 
 		//Listens out for an enter key on the textfield. 
-		//Calls to add the inputted course to the arraylist 
+		//Calls to add the inputed course to the arraylist 
 
 		textFieldUserInput.addKeyListener(new KeyAdapter() {
 			@Override
@@ -236,12 +239,12 @@ public class ScheduleGenerator {
 		{
 			selectedCode=(selectedCode.substring(0, position)+"-"+selectedCode.substring(position+1));
 		}
-		//blank was entered//or non that fits the three formats
+		//blank was entered//or none that fits the three formats
 		else if(selectedCode.length()<5)
 		{
 			//just so that it does not enter the next if
 		}
-		//no dash and not space found
+		//no dash and no space found
 		else if(position2==-1)
 		{
 			selectedCode=(selectedCode.substring(0,4)+"-"+selectedCode.substring(4));
@@ -254,6 +257,7 @@ public class ScheduleGenerator {
 			{
 				if(!selectedCourseCodes.contains(selectedCode))
 				{
+					//course was not yet added to the requests
 					requestedCourses.addAll(returnedCourses);
 					selectedCourseCodes.add(selectedCode);
 					JOptionPane.showMessageDialog(null, "Course added successfully.\n\nRequested Course Count: "+selectedCourseCodes.size());
@@ -311,7 +315,6 @@ public class ScheduleGenerator {
 
 	private void listPanelDisplay() {
 		
-		//requestedCourses = ScheduleAlgorithm.getRequestedCourses(selectedCourseCodes, courses);
 		if(requestedCourses==null)
 		{	
 			requestedCourses=new ArrayList<Course>();
@@ -385,10 +388,10 @@ public class ScheduleGenerator {
 		restartButtonActionListener();
 
 		//The rows of the table 
-		Vector <Comparable> newRow1 = new Vector <Comparable> ();	//	3-4
-		Vector <Comparable> newRow2 = new Vector <Comparable> ();	//	4-5
-		Vector <Comparable> newRow3 = new Vector <Comparable> ();	// 6-8
-		Vector <Comparable> newRow4 = new Vector <Comparable> ();	// 8-10
+		Vector <Comparable<String>> newRow1 = new Vector <Comparable<String>> ();	//	3-4
+		Vector <Comparable<String>> newRow2 = new Vector <Comparable<String>> ();	//	4-5
+		Vector <Comparable<String>> newRow3 = new Vector <Comparable<String>> ();	// 6-8
+		Vector <Comparable<String>> newRow4 = new Vector <Comparable<String>> ();	// 8-10
 		newRow1.add("3:10-4:15");
 		newRow2.add("4:25-5:30");
 		newRow3.add("6:00-8:15");
@@ -492,19 +495,12 @@ public class ScheduleGenerator {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
+				//hiding previous frame
 				frame.setVisible(false);
 				
-				//recalled the main
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							ScheduleGenerator window = new ScheduleGenerator();
-							window.frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+				//call the code from main again to restart
+				startProgram();
+				
 			}
 		});
 	}
