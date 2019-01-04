@@ -384,14 +384,6 @@ public class ScheduleGenerator {
 		chartPanel.add(restartButton);
 		
 		restartButtonActionListener();
-		
-		//to fill the table with info
-
-		/*ArrayList <String> times = new ArrayList<String> ();
-		times.add("3:10-4:15");
-		times.add("4:25-5:30");
-		times.add("6:00-8:15");
-		times.add("8:20-10:30");*/
 
 		//The rows of the table 
 		Vector <Comparable> newRow1 = new Vector <Comparable> ();	//	3-4
@@ -478,7 +470,7 @@ public class ScheduleGenerator {
 		}
 		else
 		{
-			notIncludedCoursesLabel.setText("Thank you for using our program.\n Your courses were successfully added to the schedule.");
+			notIncludedCoursesLabel.setText("Thank you for using our program!\n Your courses were successfully added to the schedule!");
 		}
 	}
 	
@@ -501,20 +493,7 @@ public class ScheduleGenerator {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				//clear previous information
-				/*selectedCourseCodes = new ArrayList<String>(); ;
-				requestedCourses=new ArrayList<Course>(); ;
-				modelTable.setRowCount(0);
-				chartTableModel.setRowCount(0); 
-				
-				//set onclick listeners on
-				//Makes Go and Done buttons responsive
-				setWelcomePanelActionListener();
-			
-				
-				//change panels*/
-				welcomePanel.setVisible(false);
-				chartPanel.setVisible(false);
+				frame.setVisible(false);
 				
 				//recalled the main
 				EventQueue.invokeLater(new Runnable() {
@@ -526,7 +505,7 @@ public class ScheduleGenerator {
 							e.printStackTrace();
 						}
 					}
-				});	
+				});
 			}
 		});
 	}
