@@ -317,13 +317,13 @@ public class ScheduleGenerator {
 			requestedCourses=new ArrayList<Course>();
 		}
 		for (int x = 0; x < requestedCourses.size(); x++) {
-			Vector<Comparable> newRow = new Vector <Comparable>();
-			newRow.add(requestedCourses.get(x).getCRN());
+			Vector<Comparable<String>> newRow = new Vector <Comparable<String>>();
+			newRow.add(requestedCourses.get(x).getCRN().toString());
 			newRow.add(requestedCourses.get(x).getCode());
 			newRow.add(requestedCourses.get(x).getTitle());
 			newRow.add(requestedCourses.get(x).getProfessor());
-			newRow.add(requestedCourses.get(x).getTimeSlot());
-			newRow.add(requestedCourses.get(x).getCredits());
+			newRow.add(requestedCourses.get(x).getTimeSlot().toString());
+			newRow.add(requestedCourses.get(x).getCredits().toString());
 			modelTable.addRow(newRow);	
 		}		
 		modelTable.fireTableDataChanged();
