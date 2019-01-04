@@ -63,7 +63,7 @@ if still more to put in and all equally important
 					//now we will do nothing, as the loop will continue
 				}catch(CreditOverflowException e )
 				{
-					System.out.println(e); //credits overflow, what do we want it to do now?
+					//nothin to do
 				}
 				
 			}

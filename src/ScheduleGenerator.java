@@ -187,10 +187,17 @@ public class ScheduleGenerator {
 		doneButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//move on to the next panel
-				listPanelDisplay();
-				listPanel.setVisible(true);
-				welcomePanel.setVisible(false);
+				if(selectedCourseCodes.size()>0)
+				{
+					//move on to the next panel
+					listPanelDisplay();
+					listPanel.setVisible(true);
+					welcomePanel.setVisible(false);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "No courses were added.");
+				}
 			}
 		});
 
